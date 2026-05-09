@@ -56,7 +56,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={["bottom"]}>
         <Stack screenOptions={{ headerShown: false }} />
       </SafeAreaView>
     </ThemeProvider>
@@ -66,5 +66,8 @@ function RootLayoutNav() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
 });

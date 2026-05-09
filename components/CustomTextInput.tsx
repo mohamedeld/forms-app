@@ -1,4 +1,5 @@
 import React, { ComponentProps } from "react";
+import { useController } from "react-hook-form";
 import {
   StyleProp,
   StyleSheet,
@@ -10,23 +11,31 @@ import {
 
 type CustomTextInput = {
   label?: string;
+  name: string;
   containerStyle?: StyleProp<ViewStyle>;
 } & ComponentProps<typeof TextInput>;
 const CustomTextInput = ({
   label,
   containerStyle,
+  name,
   ...rest
 }: CustomTextInput) => {
-  const error = undefined;
+  const {
+    field: { onBlur, onChange, value },
+    fieldState: { error },
+  } = useController({ name });
   return (
     <View style={containerStyle}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         style={[styles.textInput, error ? styles.errorInput : {}, rest?.style]}
         {...rest}
+        value={value}
+        onChangeText={onChange}
+        onBlur={onBlur}
       />
       <Text numberOfLines={1} style={styles.error}>
-        {(error as any)?.message}
+        {error?.message}
       </Text>
     </View>
   );
