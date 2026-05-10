@@ -1,18 +1,31 @@
 import CustomButton from "@/components/CustomButton";
+import CustomPicker from "@/components/CustomPicker";
 import CustomTextInput from "@/components/CustomTextInput";
 import WrapperContainer from "@/components/WrapperContainer";
+import { useCheckoutForm } from "@/context/CheckoutFormProvider";
 import { PersonaInfoSchema, PersonaInfoType } from "@/schema/personaSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import React from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
+import countries from "../../assets/countries.json";
 const PersonalDetailsForm = () => {
+  const {
+    state: { personalInfo },
+    setState,
+  } = useCheckoutForm();
   const form = useForm({
     resolver: zodResolver(PersonaInfoSchema),
+    defaultValues: personalInfo,
   });
-  const handleNext = (data: PersonaInfoType) => {
-    console.log("data", data);
+  const handleNext: SubmitHandler<PersonaInfoType> = (data) => {
+    setState((prev) => ({
+      ...prev,
+      personalInfo: {
+        ...data,
+      },
+    }));
     router.push("/checkout/payment");
   };
   return (
@@ -29,6 +42,7 @@ const PersonalDetailsForm = () => {
             label="Address"
             placeholder="Address"
           />
+
           <View style={{ flexDirection: "row", gap: 5 }}>
             <CustomTextInput
               label="City"
@@ -43,6 +57,14 @@ const PersonalDetailsForm = () => {
               containerStyle={{ flex: 1 }}
             />
           </View>
+          <CustomPicker
+            name="country"
+            items={countries?.map((country) => ({
+              label: country?.name,
+              value: country?.code,
+            }))}
+            placeholder={{ label: "Select your country" }}
+          />
           <CustomTextInput
             label="Phone"
             name="phone"

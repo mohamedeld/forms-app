@@ -7,6 +7,7 @@ export const PersonaInfoSchema = z.object({
   address: z.string({ message: "Address is required" }),
   city: z.string().min(1, { message: "City is required" }),
   postcode: z.string().min(1, { message: "Post code is required" }),
+  country: z.string().length(2),
   phone: z.string().min(1, { message: "Phone code is required" }),
 });
 
